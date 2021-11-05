@@ -1,0 +1,30 @@
+{
+  "name": "portfolio-test",
+  "version": "1.0.0",
+  "description": "Mixing refraction shaders and animations.",
+  "keywords": [],
+  "main": "src/index.js",
+  "dependencies": {
+    "@ninefour/euphony": "1.0.0",
+    "@react-spring/core": "9.3.0",
+    "@react-spring/three": "9.3.0",
+    "@react-spring/web": "9.3.0",
+    "@react-three/drei": "7.6.1",
+    "@react-three/fiber": "7.0.6",
+    "prop-types": "15.7.2",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-scripts": "4.0.3",
+    "react-spring": "9.3.0",
+    "seedrandom": "3.0.5",
+    "styled-components": "5.3.1",
+    "three": "0.132.2",
+    "zustand": "3.5.10"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
