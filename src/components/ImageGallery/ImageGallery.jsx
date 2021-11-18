@@ -29,6 +29,7 @@ const images = [
 ];
 
 const GalleryContainer = styled(animated.div)`
+  visibility: ${(props) => (props.visible ? "visible" : "hidden")};
   z-index: 10;
   position: fixed;
   top: 0;
@@ -61,7 +62,7 @@ const XContainer = styled("div")`
   width: 5%;
 `;
 
-function ImageGallery() {
+function ImageGallery({ visible }) {
   const [currentIndex, setIndex] = useState(0);
 
   const toggles = [];
@@ -79,7 +80,7 @@ function ImageGallery() {
   const height = Math.round(width * aspectRatio);
 
   return (
-    <GalleryContainer>
+    <GalleryContainer visible={visible}>
       <ArrowContainer>
         <Arrow isLeft color={secondary} />
       </ArrowContainer>

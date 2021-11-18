@@ -37,7 +37,7 @@ function EndSection({ index, parallax, image, bgText, header, aspect, html }) {
 
           {/* english text */}
           <Text
-            font={"/fonts/BorisBlackBloxxDirty.ttf"}
+            font={"../../fonts/BorisBlackBloxxDirty.ttf"}
             fontSize={fontSize}
             color={secondary}
             fillOpacity={0.8}
@@ -47,7 +47,7 @@ function EndSection({ index, parallax, image, bgText, header, aspect, html }) {
             nine
           </Text>
           <Text
-            font={"/fonts/BorisBlackBloxxDirty.ttf"}
+            font={"../../fonts/BorisBlackBloxxDirty.ttf"}
             fontSize={fontSize}
             color={primary}
             fillOpacity={0.8}

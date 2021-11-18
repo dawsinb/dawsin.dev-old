@@ -1,9 +1,11 @@
 import React, { Suspense } from "react"
+import { FontLoader } from "three"
 import { useThree } from "@react-three/fiber"
 import { useStore } from "../../store"
 import { Section, SectionItem } from "./Section"
 import { Html, Text } from "@react-three/drei"
 import { Refractor } from "../Refractor"
+import BorisBlackBloxxDirty from "../../fonts/BorisBlackBloxxDirty.json"
 
 function TitleSection({ index, parallax, image, bgText, header, aspect, html }) {
   const isMobile = false
@@ -27,22 +29,27 @@ function TitleSection({ index, parallax, image, bgText, header, aspect, html }) 
   const titleX = -size.width / 4
   const titleY = 0
   const titlePosition = [titleX, titleY, 0]
-  const fontSize = width / 6
+  const fontSize = width / 10
 
   const htmlX = -width / 2
   const htmlY = -height / 4
   const htmlPosition = [htmlX, htmlY, 10]
 
+  const font = new FontLoader().parse(BorisBlackBloxxDirty)
+
   return (
     <Section index={index} parallax={parallax} height={sectionHeight}>
       <SectionItem parallax={2}>
         <group position={titlePosition}>
-          <Text layers={1} font={"/fonts/BorisBlackBloxxDirty.ttf"} fontSize={fontSize} color={primary} anchorX={"0%"} anchorY={"100%"}>
-            dawsin
-          </Text>
-          <Text layers={1} font={"/fonts/BorisBlackBloxxDirty.ttf"} fontSize={fontSize} color={secondary} anchorX={"0%"} anchorY={"75%"}>
-            .dev
-          </Text>
+          <mesh layers={1}>
+            <textGeometry args={["dawsin", {font: font, size: fontSize, height: 1}]}/>
+            <meshBasicMaterial color={primary} />
+          </mesh>
+
+          <mesh layers={1} position={[0, -fontSize / 1.5, 0]}>
+            <textGeometry args={[".dev", {font: font, size: fontSize, height: 1}]}/>
+            <meshBasicMaterial color={secondary} />
+          </mesh>
         </group>
       </SectionItem>
 
@@ -74,3 +81,11 @@ function TitleSection({ index, parallax, image, bgText, header, aspect, html }) 
 }
 
 export { TitleSection }
+
+
+// <Text layers={1} font={"../../fonts/BorisBlackBloxxDirty.ttf"} fontSize={fontSize} color={primary} anchorX={"0%"} anchorY={"100%"}>
+//   dawsin
+// </Text>
+// <Text layers={1} font={"../../fonts/BorisBlackBloxxDirty.ttf"} fontSize={fontSize} color={secondary} anchorX={"0%"} anchorY={"75%"}>
+//   .dev
+// </Text>

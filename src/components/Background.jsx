@@ -8,32 +8,11 @@ import seedRandom from "seedrandom";
 function Background() {
   const { size } = useThree();
 
-  // calculate bg brush stroke position
-  const generateBgBrush = (seed) => {
-    // generate brush
-    const svg = `/svg/brush${Math.floor(seedRandomRange(seed, 0, 7))}.svg`;
-
-    // generate position
-    const x = seedRandomRange(seed, -size.width / 2, size.width / 2);
-    const y = seedRandomRange(seed, -size.height / 2, size.height / 2);
-    const position = [x, y, 0];
-    // generate rotation
-    const rotation = [0, 0, Math.PI * seedRandomRange(seed, -0.3, 0.3)];
-    // generate scale
-    const scale = [
-      seedRandomRange(seed, 0.5, 1.1),
-      seedRandomRange(seed, 0.5, 1.1),
-      0
-    ];
-
-    return { svg, position, rotation, scale };
-  };
-
   // generate seed for bgBrush generation
   const baseSeed = useStore((state) => state.baseSeed);
 
   // generate a brush section for each section
-  const numSections = 7;
+  const numSections = 8;
   const brushSections = [];
   for (let i = 0; i < numSections; i++) {
     const seed = new seedRandom(baseSeed + i);
@@ -90,7 +69,7 @@ function Background() {
   });
 
   return (
-    <group ref={groupRef} position={[0, 0, -11]}>
+    <group ref={groupRef} position={[0, 0, -1000]}>
       {brushSections.map((brushSection, index) => (
         <group position={[0, -size.height * index, 0]}>
           {brushSection.map((brush) => (
@@ -99,6 +78,7 @@ function Background() {
               position={brush.position}
               rotation={brush.rotation}
               scale={brush.scale}
+              color={"#181818"}
             />
           ))}
         </group>

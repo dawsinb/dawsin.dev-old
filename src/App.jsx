@@ -10,6 +10,7 @@ import {
   Euphony,
   Music
 } from "./components/sections/content/ContentIndex";
+import { PortfolioSection } from "./components/sections/PortfolioSection";
 import { EndSection } from "./components/sections/EndSection";
 import { useStore } from "./store";
 import { Background } from "./components/Background";
@@ -31,6 +32,7 @@ function App() {
         <TitleSection index={0} parallax={1.5} />
 
         <ContentSection
+          alternate
           index={1}
           header={"about me"}
           bgText={"<meta>"}
@@ -46,8 +48,12 @@ function App() {
         >
           <CommercialWork />
         </ContentSection>
+
+        <PortfolioSection index={3} parallax={1.25} />
+
         <ContentSection
-          index={3}
+          alternate
+          index={4}
           header={"research"}
           bgText={"<data>"}
           image="/images/distorted.jpg"
@@ -55,7 +61,7 @@ function App() {
           <Research />
         </ContentSection>
         <ContentSection
-          index={4}
+          index={5}
           header={"euphony"}
           bgText={"<script>"}
           image="/images/music.jpg"
@@ -63,7 +69,8 @@ function App() {
           <Euphony />
         </ContentSection>
         <ContentSection
-          index={5}
+          alternate
+          index={6}
           header={"music"}
           bgText={"<audio>"}
           image="/images/line.jpg"
@@ -71,7 +78,7 @@ function App() {
           <Music />
         </ContentSection>
 
-        <EndSection index={6} parallax={1.5} />
+        <EndSection index={7} parallax={1.5} />
         <Background />
       </Canvas>
     </CanvasContainer>

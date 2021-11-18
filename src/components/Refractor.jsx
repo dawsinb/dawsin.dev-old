@@ -6,7 +6,7 @@ import { BackfaceMaterial } from "./refractionShaders/backfaceMaterial"
 import { RefractionMaterial } from "./refractionShaders/refractionMaterial"
 
 function Refractor() {
-  const { nodes } = useGLTF("/rock.gltf")
+  const { nodes } = useGLTF("/models/rock.gltf")
   const { size, gl, scene, camera } = useThree()
   const model = useRef()
 

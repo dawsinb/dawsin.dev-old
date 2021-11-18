@@ -1,11 +1,13 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect, useRef } from "react";
 import { useThree, useLoader } from "@react-three/fiber";
 import styled from "styled-components";
 import { useStore } from "../../store";
 import { Section, SectionItem } from "./Section";
 import { Html, Text } from "@react-three/drei";
 import { DistortionPlane } from "../DistortionPlane";
-import { TextureLoader, LinearFilter } from "three";
+import { FontLoader, TextureLoader, LinearFilter } from "three";
+import ModeNine from "../../fonts/ModeNine.json"
+import Mont_Heavy from "../../fonts/Mont_Heavy.json"
 
 const Content = styled("div")`
   width: 100%;
@@ -54,7 +56,7 @@ const Content = styled("div")`
   }
 `;
 
-function ContentSection({ index, image, bgText, header, children }) {
+function ContentSection({ index, alternate, image, bgText, header, children }) {
   const { size } = useThree();
 
   // use mobile layout if vertical orientation
@@ -66,17 +68,14 @@ function ContentSection({ index, image, bgText, header, children }) {
   const marginY = useStore((state) => state.marginY);
   const height = size.height * (1 - marginY);
 
-  // alternate based on index
-  const alternate = Boolean(index % 2);
-
   // alternate colors
   const primary = useStore((state) => state.primaryColor);
   const secondary = useStore((state) => state.secondaryColor);
   const primaryBright = useStore((state) => state.primaryBright);
   const secondaryBright = useStore((state) => state.secondaryBright);
-  const color = index % 2 ? primary : secondary;
-  const colorBright = index % 2 ? primaryBright : secondaryBright;
-  const altColorBright = index % 2 ? secondaryBright : primaryBright;
+  const color = alternate ? primary : secondary;
+  const colorBright = alternate ? primaryBright : secondaryBright;
+  const altColorBright = alternate ? secondaryBright : primaryBright;
 
   // load image
   const imageTexture = useLoader(TextureLoader, image);
@@ -112,18 +111,29 @@ function ContentSection({ index, image, bgText, header, children }) {
   const headerX = (width / 2) * (alternate ? -1 : 1);
   const headerY = imageHeight / 2 + imageY + padding;
   const headerPosition = [headerX, headerY, -1];
-  const headerFontSize = isMobile ? width / 15 : width / 20;
+  const headerFontSize = isMobile ? width / 20 : width / 25;
 
   // calculate bg text position
   const bgTextX = (width / 2) * (alternate ? 1 : -1);
-  const bgTextY = height / 2;
+  const bgTextY = height / 4;
   const bgTextPosition = [bgTextX, bgTextY, -10];
-  const bgTextFontSize = width / 6;
+  const bgTextFontSize = width / 10;
+
+  const headerFont = new FontLoader().parse(Mont_Heavy)
+  const bgTextFont = new FontLoader().parse(ModeNine)
+
+  const headerRef = useRef()
+  useEffect(() => {
+    if (!alternate) {
+      headerRef.current.geometry.computeBoundingBox()
+      headerRef.current.position.x -= headerRef.current.geometry.boundingBox.max.x - headerRef.current.geometry.boundingBox.min.x
+    }
+  }, [])
 
   return (
     <Section
       index={index}
-      parallax={1 + (isMobile || alternate ? 0 : 0.5)}
+      parallax={1 + (isMobile || !alternate ? 0 : 0.5)}
       height={100}
     >
       {/* html content*/}
@@ -151,30 +161,19 @@ function ContentSection({ index, image, bgText, header, children }) {
 
       {/* header */}
       <SectionItem parallax={1.0}>
-        <Text
-          font={"/fonts/Mont-Heavy.otf"}
-          fontSize={headerFontSize}
-          color={color}
-          anchorX={alternate ? "left" : "right"}
-          anchorY={"bottom"}
-          position={headerPosition}
-        >
-          {header}
-        </Text>
+        <mesh ref={headerRef} position={headerPosition}>
+          <textGeometry args={[header, {font: headerFont, size: headerFontSize, height: 1}]} />
+          <meshBasicMaterial color={color} />
+        </mesh>
+        
       </SectionItem>
 
       {/* bg text */}
       <SectionItem parallax={-2.0}>
-        <Text
-          font={"/fonts/modenine.ttf"}
-          fontSize={bgTextFontSize}
-          anchorX={alternate ? "right" : "left"}
-          anchorY={"top"}
-          position={bgTextPosition}
-        >
-          {bgText}
-          <meshBasicMaterial transparent color={"#ffffff"} opacity={0.04} />
-        </Text>
+        <mesh position={bgTextPosition}>
+          <textGeometry args={[bgText, {font: bgTextFont, size: bgTextFontSize, height: 1}]}/>
+          <meshBasicMaterial transparent color={"#ffffff"}  opacity={0.04} />
+        </mesh>
       </SectionItem>
     </Section>
   );

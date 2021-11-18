@@ -38,12 +38,12 @@ function ScrollOverlay() {
   const offsetDistance = Math.ceil(size * 2.25);
 
   //const isMobile = window.innerWidth < window.innherHeight;
-  const isMobile = true;
+  const isMobile = false;
 
   const height = isMobile ? size * 4 : numSections * offsetDistance + size;
   const width = isMobile ? numSections * offsetDistance + size : size * 4;
 
-  const bgMaxSize = isMobile ? 375 : 275;
+  const bgMaxSize = isMobile ? 400 : 275;
 
   // state toggle used to interpolate values for animations
   const [toggle, setToggle] = useState(false);
