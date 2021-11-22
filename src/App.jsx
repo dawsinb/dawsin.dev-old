@@ -27,6 +27,7 @@ function App() {
       <Canvas
         linear
         orthographic
+        dpr={[2, 2]}
         camera={{ position: [0, 0, 10000], far: 11000 }}
       >
         <TitleSection index={0} parallax={1.5} />

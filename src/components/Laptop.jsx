@@ -1,15 +1,18 @@
 import React, { useMemo, useRef, useEffect } from "react";
 import { useLoader, useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
-import { TextureLoader, LinearFilter } from "three";
+import { TextureLoader, NearestFilter, LinearFilter } from "three";
 
 function Laptop({ ...props }) {
   const { nodes } = useGLTF("/models/laptop.gltf");
 
   const group = useRef();
 
-  const imageTexture = useLoader(TextureLoader, "/images/self.jpg");
-  useMemo(() => (imageTexture.minFilter = LinearFilter), [imageTexture]);
+  const imageTexture = useLoader(TextureLoader, "/images/sites/mlmp/desktop/home_dark.png");
+  useMemo(() => {
+    imageTexture.minFilter = NearestFilter
+    imageTexture.magFilter = LinearFilter
+  }, [imageTexture]);
 
   function mapGltf(node) {
     if (node.type === "Group") {
