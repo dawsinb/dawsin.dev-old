@@ -10,7 +10,7 @@ import { Arrow } from "../Arrow";
 import { Slider } from "../Slider";
 import { useSpring } from "@react-spring/core";
 import { animated } from "@react-spring/three";
-import { SpotLightHelper } from "three";
+import { SpotLightHelper, Vector2 } from "three";
 import styled from "styled-components";
 
 const ArrowContainer = styled("div")`
@@ -43,6 +43,106 @@ function PortfolioSection({ index, parallax }) {
   const primary = useStore((state) => state.primaryColor);
   const secondary = useStore((state) => state.secondaryColor);
 
+  // laptop / phone images
+  const laptopImages = [
+    "/images/sites/mlmp/desktop/home_dark.png",
+    "/images/sites/mlmp/desktop/module_dark.png",
+    "/images/sites/mlmp/desktop/home_light.png",
+    "/images/sites/mlmp/desktop/module_light.png"
+  ]
+  const phoneImages = [
+    "/images/sites/mlmp/mobile/home_dark.png",
+    "/images/sites/mlmp/mobile/home_light.png",
+    "/images/sites/mlmp/mobile/module_dark.png",
+    "/images/sites/mlmp/mobile/module_light.png"
+  ]
+  // noise / displacement maps
+  const noiseUrl = "/images/noise.jpg";
+  const displacementUrl = "/images/displacement.jpg"
+
+
+  /* Calculate Positions / sizes */
+
+  const sliderSize = 3;
+
+  const phoneScale = height / 4.5;
+  const phoneY = -phoneScale;
+  const phonePosition = [0, phoneY, 0];
+
+  const laptopScale = height / 36;
+  const laptopY = -laptopScale * 8;
+  const laptopPosition = [0, laptopY, 0];
+
+  // device color (actually controls ambient light color which is then reflected diffusely)
+  const [colorToggle, setColorToggle] = useState(false);
+  const { colorSpring } = useSpring({
+    colorSpring: Number(colorToggle),
+    config: {
+      mass: 1,
+      tension: 280,
+      friction: 120
+    }
+  });
+
+  // set light directions
+  const spotLightRef = useRef();
+  const directionalLightRef= useRef();
+  const lightTargetRef = useRef();
+  useEffect(() => {
+    spotLightRef.current.target = lightTargetRef.current
+    directionalLightRef.current.target = lightTargetRef.current
+  }, []);
+
+  // state to handle mouse style when hovering objects
+  const [hovered, setHovered] = useState(false);
+  useEffect(
+    () => void (document.body.style.cursor = hovered ? "pointer" : "auto"),
+    [hovered]
+  );
+
+  // image indices and direction to pass to textureFader shader
+  const [imageIndex, setImageIndex] = useState({ prev: 0, current: 0 })
+  const [direction, setDirection] = useState(new Vector2(0, 0))
+
+  // handlers for left / right arrow
+  const handleClickLeft = () => {
+    // go to previous image
+    setImageIndex({
+      prev: imageIndex.current,
+      current: imageIndex.current === 0 ? laptopImages.length - 1 : imageIndex.current - 1
+    })
+    // set direction to left and slightly down
+    setDirection(new Vector2(-1, 0.1))
+
+    // switch color
+    setColorToggle(!colorToggle)
+  }
+  const handleClickRight = () => {
+    // go to next image
+    setImageIndex({
+      prev: imageIndex.current,
+      current: (imageIndex.current + 1) % laptopImages.length
+    })
+    // set direction to right and slightly down
+    setDirection(new Vector2(1, 0.1))
+    
+    // switch color
+    setColorToggle(!colorToggle)
+  }
+
+  // toggle for current device
+  const [deviceToggle, setDeviceToggle] = useState(false);
+  const { deviceSpring } = useSpring({
+    deviceSpring: Number(deviceToggle),
+    config: {
+      mass: 1,
+      tension: 120,
+      friction: 18
+    }
+  });
+
+
+  // set up laptop / phone motion
   const laptopRef = useRef();
   const phoneRef = useRef();
   useFrame(({ clock }) => {
@@ -59,50 +159,6 @@ function PortfolioSection({ index, parallax }) {
     phoneRef.current.position.y = (Math.cos(t) * height) / 64;
   });
 
-  /* Calculate Positions / sizes */
-
-  const sliderSize = 3;
-
-  const phoneScale = height / 4.5;
-  const phoneY = -phoneScale;
-  const phonePosition = [0, phoneY, 0];
-
-  const laptopScale = height / 36;
-  const laptopY = -laptopScale * 8;
-  const laptopPosition = [0, laptopY, 0];
-
-  const [toggle, setToggle] = useState(false);
-  const { colorSpring } = useSpring({
-    colorSpring: Number(toggle),
-    config: {
-      mass: 1,
-      tension: 280,
-      friction: 120
-    }
-  });
-
-  const lightRef = useRef();
-  const lightRef_test = useRef();
-  const lightTargetRef = useRef();
-  //useHelper(lightRef, SpotLightHelper, 'cyan')
-  useEffect(() => (lightRef.current.target = lightTargetRef.current), []);
-  useEffect(() => (lightRef_test.current.target = lightTargetRef.current), []);
-  const [deviceToggle, setDeviceToggle] = useState(false);
-  const { deviceSpring } = useSpring({
-    deviceSpring: Number(deviceToggle),
-    config: {
-      mass: 1,
-      tension: 120,
-      friction: 18
-    }
-  });
-
-  const [hovered, setHovered] = useState(false);
-  useEffect(
-    () => void (document.body.style.cursor = hovered ? "pointer" : "auto"),
-    [hovered]
-  );
-
   return (
     <Section index={index} parallax={parallax} height={sectionHeight}>
       <animated.ambientLight
@@ -110,13 +166,13 @@ function PortfolioSection({ index, parallax }) {
         color={colorSpring.to({ output: [primary, secondary] })}
       />
       <animated.directionalLight
-        ref={lightRef_test}
+        ref={directionalLightRef}
         position={[500, 2500, 3000]}
         intensity={2}
         color={"#f0f0f0"}
       />
       <spotLight
-        ref={lightRef}
+        ref={spotLightRef}
         intensity={0.8}
         position={[500, 750, 5000]}
         angle={Math.PI / 5}
@@ -126,11 +182,11 @@ function PortfolioSection({ index, parallax }) {
 
       <SectionItem parallax={1}>
         <Html zIndexRange={[0, 0]}>
-          <ArrowContainer isLeft={true} onClick={() => setToggle(!toggle)}>
-            <Arrow isLeft={true} color={secondary} />
+          <ArrowContainer isLeft onClick={handleClickLeft}>
+            <Arrow isLeft color={secondary} />
           </ArrowContainer>
-          <ArrowContainer isLeft={false} onClick={() => setToggle(!toggle)}>
-            <Arrow isLeft={false} color={primary} />
+          <ArrowContainer onClick={handleClickRight}>
+            <Arrow color={primary} />
           </ArrowContainer>
         </Html>
       </SectionItem>
@@ -156,6 +212,12 @@ function PortfolioSection({ index, parallax }) {
             position-x={deviceSpring.to({ output: [0, width] })}
           >
             <Laptop
+              imageIndex={imageIndex.current}
+              prevImageIndex={imageIndex.prev}
+              direction={direction}
+              imageUrls={laptopImages} 
+              displacementUrl={displacementUrl}
+              noiseUrl={noiseUrl}
               scale={laptopScale}
               position={laptopPosition}
               rotation={[0.25, 0, 0]}

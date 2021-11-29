@@ -1,18 +1,51 @@
-import React, { useMemo, useRef, useEffect } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { useLoader, useFrame } from "@react-three/fiber";
-import { useGLTF } from "@react-three/drei";
+import { useGLTF, useTexture } from "@react-three/drei";
 import { TextureLoader, NearestFilter, LinearFilter } from "three";
+import "./shaders/TextureFader"
+import { lerp } from "../utils"
 
-function Laptop({ ...props }) {
-  const { nodes } = useGLTF("/models/laptop.gltf");
+function Laptop({ imageIndex, prevImageIndex, direction, imageUrls, displacementUrl, noiseUrl, ...props }) {
+  const { nodes } = useGLTF("/models/laptop3.gltf");
 
-  const group = useRef();
+  const groupRef = useRef();
+  const materialRef = useRef();
 
-  const imageTexture = useLoader(TextureLoader, "/images/sites/mlmp/desktop/home_dark.png");
+  const imageTextures = useTexture(imageUrls);
+  const displacementTexture = useTexture(displacementUrl);
+  const noiseTexture = useTexture(noiseUrl);
+
   useMemo(() => {
-    imageTexture.minFilter = NearestFilter
-    imageTexture.magFilter = LinearFilter
-  }, [imageTexture]);
+    imageTextures.forEach((texture) => {
+      texture.flipY = false
+      texture.minFilter = LinearFilter
+      texture.magFilter = LinearFilter
+    }) 
+  }, [imageTextures]);
+  useMemo(() => {
+    displacementTexture.minFilter = displacementTexture.magFilter = NearestFilter
+  }, [displacementTexture]);
+  useMemo(() => {
+    noiseTexture.minFilter = noiseTexture.magFilter = NearestFilter
+  }, [noiseTexture]);
+
+  useEffect(() => {
+    // update index
+    materialRef.current.index = imageIndex
+    materialRef.current.prevIndex = prevImageIndex
+    // update direction
+    materialRef.current.direction = direction
+
+    // update offsets
+    materialRef.current.displacementOffset.fromArray([(materialRef.current.index * 17) / 7, (materialRef.current.index * 7) / 17])
+    materialRef.current.noiseOffset.fromArray([(materialRef.current.index * 17) / 7, (materialRef.current.index * 7) / 17])
+
+    materialRef.current.effectFactor = 1
+  }, [imageIndex])
+
+  useFrame(() => {
+    materialRef.current.effectFactor = lerp(materialRef.current.effectFactor, 0, 0.04)
+  })
 
   function mapGltf(node) {
     if (node.type === "Group") {
@@ -34,7 +67,16 @@ function Laptop({ ...props }) {
             rotation={node.rotation}
             geometry={node.geometry}
           >
-            <meshBasicMaterial map={imageTexture} />
+            <textureFader 
+              attach="material"
+              ref={materialRef}
+              args={[imageTextures.length]}
+              imageTextures={imageTextures}
+              noiseTexture={noiseTexture}
+              displacementTexture={displacementTexture}
+              noiseIntensity={0.2}
+              displacementIntensity={1.5}
+            />
           </mesh>
         );
       } else {
@@ -52,7 +94,7 @@ function Laptop({ ...props }) {
   }
 
   return (
-    <group ref={group}>
+    <group ref={groupRef}>
       <group {...props}>{mapGltf(nodes.Scene)}</group>
     </group>
   );

@@ -122,13 +122,19 @@ function ContentSection({ index, alternate, image, bgText, header, children }) {
   const headerFont = new FontLoader().parse(Mont_Heavy)
   const bgTextFont = new FontLoader().parse(ModeNine)
 
+  // right align header or alternate text if needed
   const headerRef = useRef()
+  const bgTextRef = useRef()
   useEffect(() => {
     if (!alternate) {
       headerRef.current.geometry.computeBoundingBox()
-      headerRef.current.position.x -= headerRef.current.geometry.boundingBox.max.x - headerRef.current.geometry.boundingBox.min.x
+      headerRef.current.parent.position.x = headerRef.current.geometry.boundingBox.min.x - headerRef.current.geometry.boundingBox.max.x
     }
-  }, [])
+    else {
+      bgTextRef.current.geometry.computeBoundingBox()
+      bgTextRef.current.parent.position.x = bgTextRef.current.geometry.boundingBox.min.x - bgTextRef.current.geometry.boundingBox.max.x
+    }
+  }, [size])
 
   return (
     <Section
@@ -161,19 +167,23 @@ function ContentSection({ index, alternate, image, bgText, header, children }) {
 
       {/* header */}
       <SectionItem parallax={1.0}>
-        <mesh ref={headerRef} position={headerPosition}>
-          <textGeometry args={[header, {font: headerFont, size: headerFontSize, height: 1}]} />
-          <meshBasicMaterial color={color} />
-        </mesh>
+        <group>
+          <mesh ref={headerRef} position={headerPosition}>
+            <textGeometry args={[header, {font: headerFont, size: headerFontSize, height: 1}]} />
+            <meshBasicMaterial color={color} />
+          </mesh>
+        </group>
         
       </SectionItem>
 
       {/* bg text */}
       <SectionItem parallax={-2.0}>
-        <mesh position={bgTextPosition}>
-          <textGeometry args={[bgText, {font: bgTextFont, size: bgTextFontSize, height: 1}]}/>
-          <meshBasicMaterial transparent color={"#ffffff"}  opacity={0.04} />
-        </mesh>
+        <group>
+          <mesh ref={bgTextRef} position={bgTextPosition}>
+            <textGeometry args={[bgText, {font: bgTextFont, size: bgTextFontSize, height: 1}]}/>
+            <meshBasicMaterial transparent color={"#ffffff"}  opacity={0.04} />
+          </mesh>
+        </group>
       </SectionItem>
     </Section>
   );
