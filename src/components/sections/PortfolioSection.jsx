@@ -232,6 +232,12 @@ function PortfolioSection({ index, parallax }) {
             position-x={deviceSpring.to({ output: [-width, 0] })}
           >
             <Phone
+              imageIndex={imageIndex.current}
+              prevImageIndex={imageIndex.prev}
+              direction={direction}
+              imageUrls={phoneImages} 
+              displacementUrl={displacementUrl}
+              noiseUrl={noiseUrl}
               scale={phoneScale}
               position={phonePosition}
               rotation={[0, 0, 0]}
