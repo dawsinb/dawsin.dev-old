@@ -24,6 +24,7 @@ const CanvasContainer = styled("div")`
 function App() {
   return (
     <CanvasContainer>
+      <Stats />
       <Canvas
         linear
         orthographic

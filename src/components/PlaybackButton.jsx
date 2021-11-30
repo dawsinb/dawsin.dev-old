@@ -40,7 +40,7 @@ function PlaybackButton({ scale, color, isPlaying, progress }) {
   }, [isPlaying]);
 
   return (
-    <PlaySvg scale={1} viewBox={"0 0 110 110"}>
+    <PlaySvg scale={scale} viewBox={"0 0 110 110"}>
       <circle
         className="ring"
         stroke={color}
