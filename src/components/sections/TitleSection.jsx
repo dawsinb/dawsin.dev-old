@@ -1,10 +1,11 @@
-import React, { Suspense } from "react"
+import React, { useLayoutEffect, useRef } from "react"
 import { FontLoader } from "three"
-import { useThree } from "@react-three/fiber"
+import { useThree, useFrame } from "@react-three/fiber"
 import { useStore } from "../../store"
 import { Section, SectionItem } from "./Section"
-import { Html, Text } from "@react-three/drei"
+import { Html } from "@react-three/drei"
 import { Refractor } from "../Refractor"
+import { lerp } from "../../utils"
 import BorisBlackBloxxDirty from "../../fonts/BorisBlackBloxxDirty.json"
 
 function TitleSection({ index, parallax, image, bgText, header, aspect, html }) {
@@ -26,9 +27,9 @@ function TitleSection({ index, parallax, image, bgText, header, aspect, html }) 
 
   /* Calculate Positions / sizes */
 
-  const titleX = -size.width / 4
+  const titleX = 0
   const titleY = 0
-  const titlePosition = [titleX, titleY, 0]
+  const titlePosition = [titleX, titleY, 1]
   const fontSize = width / 10
 
   const htmlX = -width / 2
@@ -37,19 +38,36 @@ function TitleSection({ index, parallax, image, bgText, header, aspect, html }) 
 
   const font = new FontLoader().parse(BorisBlackBloxxDirty)
 
+  const textRef = useRef()
+  useLayoutEffect(() => {
+    textRef.current.geometry.computeBoundingBox()
+    textRef.current.parent.position.x = (textRef.current.geometry.boundingBox.min.x - textRef.current.geometry.boundingBox.max.x) / 2
+  }, [size])
+
+  const textGroupRef = useRef()
+  
+  useFrame(({mouse}) => {
+    textGroupRef.current.position.x = lerp(textGroupRef.current.position.x, mouse.x * width / 20, 0.07)
+    textGroupRef.current.position.y = lerp(textGroupRef.current.position.y, mouse.y * height / 20, 0.07)
+    textGroupRef.current.rotation.x = lerp(textGroupRef.current.rotation.x, -mouse.y / 1.5, 0.07)
+    textGroupRef.current.rotation.y = lerp(textGroupRef.current.rotation.y, mouse.x / 1.5, 0.07)
+  })
+
   return (
     <Section index={index} parallax={parallax} height={sectionHeight}>
       <SectionItem parallax={2}>
-        <group position={titlePosition}>
-          <mesh layers={1}>
-            <textGeometry args={["dawsin", {font: font, size: fontSize, height: 1}]}/>
-            <meshBasicMaterial color={primary} />
-          </mesh>
+        <group ref={textGroupRef}>
+          <group position={titlePosition}>
+            <mesh ref={textRef} layers={1}>
+              <textGeometry args={["dawsin", {font: font, size: fontSize, height: 1}]}/>
+              <meshBasicMaterial color={primary} />
+            </mesh>
 
-          <mesh layers={1} position={[0, -fontSize / 1.5, 0]}>
-            <textGeometry args={[".dev", {font: font, size: fontSize, height: 1}]}/>
-            <meshBasicMaterial color={secondary} />
-          </mesh>
+            <mesh layers={1} position={[0, -fontSize / 1.5, 0.1]}>
+              <textGeometry args={[".dev", {font: font, size: fontSize, height: 1}]}/>
+              <meshBasicMaterial color={secondary} />
+            </mesh>
+          </group>
         </group>
       </SectionItem>
 

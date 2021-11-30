@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useRef } from "react";
+import React, { useMemo, useLayoutEffect, useRef } from "react";
 import { useThree, useLoader } from "@react-three/fiber";
 import styled from "styled-components";
 import { useStore } from "../../store";
@@ -125,7 +125,7 @@ function ContentSection({ index, alternate, image, bgText, header, children }) {
   // right align header or alternate text if needed
   const headerRef = useRef()
   const bgTextRef = useRef()
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!alternate) {
       headerRef.current.geometry.computeBoundingBox()
       headerRef.current.parent.position.x = headerRef.current.geometry.boundingBox.min.x - headerRef.current.geometry.boundingBox.max.x

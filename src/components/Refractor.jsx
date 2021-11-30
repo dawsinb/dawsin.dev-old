@@ -1,4 +1,5 @@
 import React, { useMemo, useRef, useLayoutEffect } from "react"
+import { Vector3 } from "three"
 import { useThree, useFrame } from "@react-three/fiber"
 import { useGLTF } from "@react-three/drei"
 import { WebGLRenderTarget } from "three"
@@ -15,17 +16,19 @@ function Refractor() {
     const envFbo = new WebGLRenderTarget(size.width, size.height)
     const backfaceFbo = new WebGLRenderTarget(size.width, size.height)
     const backfaceMaterial = new BackfaceMaterial()
-    const refractionMaterial = new RefractionMaterial({ envMap: envFbo.texture, backfaceMap: backfaceFbo.texture, resolution: [size.width, size.height] })
+    const refractionMaterial = new RefractionMaterial({ envMap: envFbo.texture, backfaceMap: backfaceFbo.texture, resolution: [size.width * 2, size.height * 2] })
     return [envFbo, backfaceFbo, backfaceMaterial, refractionMaterial]
   }, [size])
 
   // Render-loop
-  useFrame(({ clock }) => {
+  const rotationAxis = new Vector3()
+  useFrame(({ clock, mouse }) => {
     const t = clock.getElapsedTime()
+
     model.current.rotateX(0.006)
     model.current.rotateY(0.004)
     model.current.rotateZ(0.005 * Math.sin(clock.getElapsedTime() / 2))
-
+    
     // Render env to fbo
     camera.layers.set(1)
     gl.setRenderTarget(envFbo)
@@ -36,7 +39,7 @@ function Refractor() {
     gl.setRenderTarget(backfaceFbo)
     gl.clearDepth()
     gl.render(scene, camera)
-
+  
     // Render env to screen
     camera.layers.set(1)
     gl.setRenderTarget(null)
@@ -49,16 +52,19 @@ function Refractor() {
   }, 1)
 
   const center = (self) => self.geometry.center()
+
+  const scale = Math.max(size.width, size.height) / 2
   return (
     <mesh
       onUpdate={center}
       ref={model}
       geometry={nodes.menhir_mini.geometry}
-      position={[-size.width / 6, 0, 100]}
-      scale={[size.width / 2, size.height / 1.5, size.width / 2]}
+      position={[0, 0, 100]}
+      scale={scale}
     >
       <meshBasicMaterial />
     </mesh>
+
   )
 }
 

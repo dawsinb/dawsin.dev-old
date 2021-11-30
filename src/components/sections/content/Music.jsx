@@ -121,7 +121,7 @@ function Music() {
               title={song.title}
               handler={handler}
               isPlaying={false}
-              scale={0.9}
+              scale={0.75}
               color={"#D40749"}
             />
           </MusicItem>

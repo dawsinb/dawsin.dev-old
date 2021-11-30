@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useRef, useLayoutEffect } from "react";
+import { FontLoader } from "three"
 import { useThree } from "@react-three/fiber";
 import { Text } from "@react-three/drei";
 import { useStore } from "../../store";
 import { Section, SectionItem } from "./Section";
+import BorisBlackBloxx from "../../fonts/BorisBlackBloxx.json"
 
-function EndSection({ index, parallax, image, bgText, header, aspect, html }) {
+function EndSection({ index, parallax }) {
   const isMobile = false;
 
   // calculate base width and height
@@ -23,39 +25,30 @@ function EndSection({ index, parallax, image, bgText, header, aspect, html }) {
 
   /* Calculate Positions / sizes */
 
-  // padding between image and html
+  const fontSize = width / 10;
   const textX = 0;
-  const textY = 0;
+  const textY = fontSize / 2;
   const textPosition = [textX, textY, 0];
-  const fontSize = width / 6;
+  
+
+  const font = new FontLoader().parse(BorisBlackBloxx)
+
+
+  const center = (self) => self.center();
 
   return (
     <Section index={index} parallax={parallax} height={sectionHeight}>
       <SectionItem parallax={2}>
         <group position={textPosition}>
-          {/* japanese text */}
+          <mesh>
+            <textGeometry onUpdate={center} args={["nine", {font: font, size: fontSize, height: 1}]}/>
+            <meshBasicMaterial color={secondary} />
+          </mesh>
 
-          {/* english text */}
-          <Text
-            font={"../../fonts/BorisBlackBloxxDirty.ttf"}
-            fontSize={fontSize}
-            color={secondary}
-            fillOpacity={0.8}
-            anchorX={"50%"}
-            anchorY={"100%"}
-          >
-            nine
-          </Text>
-          <Text
-            font={"../../fonts/BorisBlackBloxxDirty.ttf"}
-            fontSize={fontSize}
-            color={primary}
-            fillOpacity={0.8}
-            anchorX={"50%"}
-            anchorY={"50%"}
-          >
-            four
-          </Text>
+          <mesh position={[0, -fontSize / 1.3, 0]}>
+            <textGeometry onUpdate={center} args={["four", {font: font, size: fontSize, height: 1}]}/>
+            <meshBasicMaterial color={primary} />
+          </mesh>
         </group>
       </SectionItem>
 
