@@ -9,8 +9,8 @@ import { animated } from "@react-spring/web";
 const Container = styled(animated.div)`
   z-index: 1;
   position: absolute;
-  width: ${(props) => props.size * props.scaleFactor}px;
-  height: ${(props) => props.size * props.scaleFactor}px;
+  width: ${(props) => props.size * props.scalefactor}px;
+  height: ${(props) => props.size * props.scalefactor}px;
   right: ${(props) =>
     props.ismobile
       ? `calc(50% - ${-props.offset}px)`
@@ -19,8 +19,8 @@ const Container = styled(animated.div)`
     props.ismobile ? "auto" : `calc(50% - ${props.offset}px)`};
   bottom: ${(props) => (props.ismobile ? `${props.size * 0.25}px` : "auto")};
   transform: translate(
-      ${(props) => (props.size * props.scaleFactor) / 2}px,
-      ${(props) => (-props.size * props.scaleFactor) / 2}px
+      ${(props) => (props.size * props.scalefactor) / 2}px,
+      ${(props) => (-props.size * props.scalefactor) / 2}px
     )
     translate(
       ${(props) =>
@@ -80,7 +80,7 @@ function PositionMarker({
   return (
     <Container
       size={size}
-      scaleFactor={scaleFactor}
+      scalefactor={scaleFactor}
       offset={startOffset}
       ismobile={ismobile}
       style={{

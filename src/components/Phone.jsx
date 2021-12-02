@@ -51,6 +51,7 @@ function Phone({ imageIndex, prevImageIndex, direction, imageUrls, displacementU
     if (node.type === "Group") {
       return (
         <group
+          key={node.name}
           position={node.position}
           scale={node.scale}
           rotation={node.rotation}
@@ -62,6 +63,7 @@ function Phone({ imageIndex, prevImageIndex, direction, imageUrls, displacementU
       if (node.name === "SCREEN") {
         return (
           <mesh
+            key={node.name}
             position={node.position}
             scale={node.scale}
             rotation={node.rotation}
@@ -82,6 +84,7 @@ function Phone({ imageIndex, prevImageIndex, direction, imageUrls, displacementU
       } else {
         return (
           <mesh
+            key={node.name}
             position={node.position}
             scale={node.scale}
             rotation={node.rotation}

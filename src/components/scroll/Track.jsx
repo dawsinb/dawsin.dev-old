@@ -120,6 +120,7 @@ function Track({
     <>
       {offsetFactors.map((offsetFactor, index) => (
         <Marker
+          key={index}
           isStartEnd={index === 0 || index === offsetFactors.length - 1}
           size={size}
           offset={offsetFactor * offsetDistance}
@@ -131,6 +132,7 @@ function Track({
       ))}
       {sectionNames.map((name, index) => (
         <TextContainer
+          key={index}
           size={size}
           offset={offsetFactors[index] * offsetDistance}
           ismobile={ismobile}

@@ -51,6 +51,7 @@ function Laptop({ imageIndex, prevImageIndex, direction, imageUrls, displacement
     if (node.type === "Group") {
       return (
         <group
+          key={node.name}
           position={node.position}
           scale={node.scale}
           rotation={node.rotation}
@@ -62,6 +63,7 @@ function Laptop({ imageIndex, prevImageIndex, direction, imageUrls, displacement
       if (node.name === "screen") {
         return (
           <mesh
+            key={node.name}
             position={node.position}
             scale={node.scale}
             rotation={node.rotation}
@@ -82,6 +84,7 @@ function Laptop({ imageIndex, prevImageIndex, direction, imageUrls, displacement
       } else {
         return (
           <mesh
+            key={node.name}
             position={node.position}
             scale={node.scale}
             rotation={node.rotation}

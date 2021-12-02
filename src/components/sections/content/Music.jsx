@@ -113,8 +113,8 @@ function Music() {
         </DynamicText>
       </TextContainer>
       <MusicContainer>
-        {songs.map((song) => (
-          <MusicItem>
+        {songs.map((song, index) => (
+          <MusicItem key={index}>
             <SongSelection
               playback={song.playback}
               id={song.id}

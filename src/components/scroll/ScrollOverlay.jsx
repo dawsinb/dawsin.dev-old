@@ -86,7 +86,7 @@ function ScrollOverlay() {
     <Container
       onMouseEnter={() => setToggle(true)}
       onMouseLeave={() => setToggle(false)}
-      ismobile={ismobile}
+      ismobile={ismobile ? 1 : 0}
       width={width}
       height={height}
       style={{
@@ -94,7 +94,7 @@ function ScrollOverlay() {
       }}
     >
       <Background
-        ismobile={ismobile}
+        ismobile={ismobile ? 1 : 0}
         style={{
           "--size": bgToggle
             .to({ output: [100, bgMaxSize] })
@@ -109,7 +109,7 @@ function ScrollOverlay() {
         numSections={numSections}
         breakpoints={breakpoints}
         textToggles={textToggles}
-        ismobile={ismobile}
+        isMobile={ismobile}
       />
     </Container>
   );

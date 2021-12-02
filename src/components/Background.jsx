@@ -71,9 +71,10 @@ function Background() {
   return (
     <group ref={groupRef} position={[0, 0, -1000]}>
       {brushSections.map((brushSection, index) => (
-        <group position={[0, -size.height * index, 0]}>
-          {brushSection.map((brush) => (
+        <group key={index} position={[0, -size.height * index, 0]}>
+          {brushSection.map((brush, index) => (
             <Svg
+              key={index}
               url={brush.svg}
               position={brush.position}
               rotation={brush.rotation}
