@@ -115,7 +115,7 @@ function ContentSection({ index, alternate, image, bgText, header, children }) {
 
   // calculate bg text position
   const bgTextX = (width / 2) * (alternate ? 1 : -1);
-  const bgTextY = height / 4;
+  const bgTextY = isMobile ? height / 2.2 : height / 4;
   const bgTextPosition = [bgTextX, bgTextY, -10];
   const bgTextFontSize = width / 10;
 

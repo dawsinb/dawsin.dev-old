@@ -16,25 +16,30 @@ import styled from "styled-components";
 const ArrowContainer = styled("div")`
   position: absolute;
   left: ${(props) => (props.isLeft ? "-35vw" : "35vw")};
+  bottom: ${(props) => 
+    props.ismobile
+      ? `-41.5vh`
+      : `0vh`};
   width: 6vw;
   transform: translate(-50%, -50%);
 `;
 
 const SliderContainer = styled("div")`
   position: absolute;
-  bottom: -43vh;
-  transform: translateX(-50%);
+  bottom: -40vh;
+  transform: translate(-50%, -50%);
 `;
 
 function PortfolioSection({ index, parallax }) {
-  const isMobile = false;
-
   // calculate base width and height
   const { size } = useThree();
   const marginX = useStore((state) => state.marginX);
   const width = size.width * (1 - marginX);
   const marginY = useStore((state) => state.marginY);
   const height = size.height * (1 - marginY);
+
+  // use mobile layout if vertical orientation
+  const isMobile = size.width < size.height;
 
   // adjust section height based on if mobile layout is used
   const sectionHeight = 100;
@@ -62,14 +67,11 @@ function PortfolioSection({ index, parallax }) {
 
 
   /* Calculate Positions / sizes */
-
-  const sliderSize = 3;
-
-  const phoneScale = height / 4.5;
+  const phoneScale = width / (isMobile ? 4 : 8);
   const phoneY = -phoneScale;
   const phonePosition = [0, phoneY, 0];
 
-  const laptopScale = height / 36;
+  const laptopScale = width / (isMobile ? 40 : 65);
   const laptopY = -laptopScale * 8;
   const laptopPosition = [0, laptopY, 0];
 
@@ -182,10 +184,10 @@ function PortfolioSection({ index, parallax }) {
 
       <SectionItem parallax={1}>
         <Html zIndexRange={[0, 0]}>
-          <ArrowContainer isLeft onClick={handleClickLeft}>
+          <ArrowContainer isLeft ismobile={isMobile} onClick={handleClickLeft}>
             <Arrow isLeft color={secondary} />
           </ArrowContainer>
-          <ArrowContainer onClick={handleClickRight}>
+          <ArrowContainer ismobile={isMobile} onClick={handleClickRight}>
             <Arrow color={primary} />
           </ArrowContainer>
         </Html>
@@ -209,7 +211,7 @@ function PortfolioSection({ index, parallax }) {
         <group position={[0, 0, 1000]}>
           <animated.group
             ref={laptopRef}
-            position-x={deviceSpring.to({ output: [0, width] })}
+            position-x={deviceSpring.to({ output: [0, width * 1.5] })}
           >
             <Laptop
               imageIndex={imageIndex.current}
@@ -229,7 +231,7 @@ function PortfolioSection({ index, parallax }) {
 
           <animated.group
             ref={phoneRef}
-            position-x={deviceSpring.to({ output: [-width, 0] })}
+            position-x={deviceSpring.to({ output: [-width * 1.25, 0] })}
           >
             <Phone
               imageIndex={imageIndex.current}

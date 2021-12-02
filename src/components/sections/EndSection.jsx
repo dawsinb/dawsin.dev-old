@@ -9,8 +9,6 @@ import Yuji_Syuku from "../../fonts/Yuji_Syuku.json"
 import { lerp } from "../../utils";
 
 function EndSection({ index, parallax }) {
-  const isMobile = false;
-
   // calculate base width and height
   const { size } = useThree();
   const marginX = useStore((state) => state.marginX);
