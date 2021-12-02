@@ -11,12 +11,12 @@ const MarkerContainer = styled("div")`
   width: ${(props) => props.size}px;
   height: ${(props) => props.size}px;
   right: ${(props) =>
-    props.isMobile
+    props.ismobile
       ? `calc(50% - ${-props.offset}px)`
       : `${props.size * 1.5}px`};
   top: ${(props) =>
-    props.isMobile ? "auto" : `calc(50% - ${props.offset}px)`};
-  bottom: ${(props) => (props.isMobile ? `${props.size * 1.5}px` : "auto")};
+    props.ismobile ? "auto" : `calc(50% - ${props.offset}px)`};
+  bottom: ${(props) => (props.ismobile ? `${props.size * 1.5}px` : "auto")};
   transform: translate(
     ${(props) => props.size / 2}px,
     ${(props) => -props.size / 2}px
@@ -31,7 +31,7 @@ function Marker({
   breakpoint,
   setJumpDirection,
   timeoutRef,
-  isMobile
+  ismobile
 }) {
   const handleClick = () => {
     setJumpDirection((prevValue) => {
@@ -55,7 +55,7 @@ function Marker({
 
   return (
     <MarkerContainer
-      isMobile={isMobile}
+      ismobile={ismobile}
       onClick={handleClick}
       size={size}
       offset={offset}
@@ -68,26 +68,26 @@ function Marker({
 const TextContainer = styled(animated.div)`
   position: absolute;
   right: ${(props) =>
-    props.isMobile ? `calc(50% - ${-props.offset}px)` : `${props.size * 4}px`};
+    props.ismobile ? `calc(50% - ${-props.offset}px)` : `${props.size * 4}px`};
   top: ${(props) =>
-    props.isMobile ? "auto" : `calc(50% - ${props.offset}px)`};
-  bottom: ${(props) => (props.isMobile ? `${props.size * 4}px` : "auto")};
+    props.ismobile ? "auto" : `calc(50% - ${props.offset}px)`};
+  bottom: ${(props) => (props.ismobile ? `${props.size * 4}px` : "auto")};
   transform: translate(
       ${(props) =>
-        props.isMobile
+        props.ismobile
           ? `${props.size / 2.2}px, ${-props.size}px`
           : `0px, ${-props.size / 1.7}px`}
     )
     translate(
       ${(props) =>
-        props.isMobile ? `0px, var(--offset, 0px)` : `var(--offset, 0px), 0px`}
+        props.ismobile ? `0px, var(--offset, 0px)` : `var(--offset, 0px), 0px`}
     );
   white-space: nowrap;
   text-align: right;
-  font-size: ${(props) => props.size * (props.isMobile ? 0.8 : 0.9)}px;
+  font-size: ${(props) => props.size * (props.ismobile ? 0.8 : 0.9)}px;
   writing-mode: ${(props) =>
-    props.isMobile ? "vertical-lr" : "horizontal-lr"};
-  text-orientation: ${(props) => (props.isMobile ? "upright" : "horizontal")};
+    props.ismobile ? "vertical-lr" : "horizontal-lr"};
+  text-orientation: ${(props) => (props.ismobile ? "upright" : "horizontal")};
   user-select: none;
 `;
 
@@ -97,7 +97,7 @@ function Track({
   numSections,
   breakpoints,
   textToggles,
-  isMobile
+  ismobile
 }) {
   const offsetFactors = [...Array(numSections)].map(
     (_, index) => -(index - (numSections - 1) / 2)
@@ -126,14 +126,14 @@ function Track({
           breakpoint={breakpoints[index]}
           setJumpDirection={setJumpDirection}
           timeoutRef={timeoutRef}
-          isMobile={isMobile}
+          ismobile={ismobile}
         />
       ))}
       {sectionNames.map((name, index) => (
         <TextContainer
           size={size}
           offset={offsetFactors[index] * offsetDistance}
-          isMobile={isMobile}
+          ismobile={ismobile}
           style={{
             opacity: textToggles[index].to({ output: [0, 1] }),
             "--offset": textToggles[index]
@@ -150,7 +150,7 @@ function Track({
         offsetDistance={offsetDistance}
         numSections={numSections}
         jumpDirection={jumpDirection}
-        isMobile={isMobile}
+        ismobile={ismobile}
       />
     </>
   );

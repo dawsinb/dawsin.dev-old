@@ -1,31 +1,31 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { animated } from "@react-spring/web";
 import styled from "styled-components";
 import { useStore } from "../../store";
 import { useSpring, useSpringRef, useChain } from "@react-spring/core";
 import { Track } from "./Track";
-// ${(props) => (props.isMobile ? "auto" : "var(--size)")}
+
 const Container = styled(animated.div)`
   position: fixed;
   right: ${(props) =>
-    props.isMobile ? `calc(50% - ${props.width / 2}px)` : "0"};
+    props.ismobile ? `calc(50% - ${props.width / 2}px)` : "0"};
   top: ${(props) =>
-    props.isMobile ? "auto" : `calc(50% - ${props.height / 2}px)`};
-  bottom: ${(props) => (props.isMobile ? "0" : "auto")};
+    props.ismobile ? "auto" : `calc(50% - ${props.height / 2}px)`};
+  bottom: ${(props) => (props.ismobile ? "0" : "auto")};
   height: ${(props) => props.height}px;
   width: ${(props) => props.width}px;
   z-index: 2;
   transform-origin: ${(props) =>
-    props.isMobile ? "center bottom" : "center right"};
+    props.ismobile ? "center bottom" : "center right"};
   transform: scale(var(--scale, 1));
 `;
 
 const Background = styled(animated.div)`
   position: absolute;
-  right: ${(props) => (props.isMobile ? "auto" : 0)};
-  bottom: ${(props) => (props.isMobile ? 0 : "auto")};
-  height: ${(props) => (props.isMobile ? "var(--size, 100%)" : "100%")};
-  width: ${(props) => (props.isMobile ? "100%" : "var(--size, 100%)")};
+  right: ${(props) => (props.ismobile ? "auto" : 0)};
+  bottom: ${(props) => (props.ismobile ? 0 : "auto")};
+  height: ${(props) => (props.ismobile ? "var(--size, 100%)" : "100%")};
+  width: ${(props) => (props.ismobile ? "100%" : "var(--size, 100%)")};
   background-color: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(7px);
 `;
@@ -37,13 +37,17 @@ function ScrollOverlay() {
   const size = Math.ceil(window.innerHeight / (9 * numSections));
   const offsetDistance = Math.ceil(size * 2.25);
 
-  //const isMobile = window.innerWidth < window.innherHeight;
-  const isMobile = false;
+  const [ismobile, setismobile] = useState(window.innerWidth < window.innerHeight)
+  useEffect(() => {
+    window.addEventListener("resize", () => {
+      setismobile(window.innerWidth < window.innerHeight);
+    });
+  }, []);
 
-  const height = isMobile ? size * 4 : numSections * offsetDistance + size;
-  const width = isMobile ? numSections * offsetDistance + size : size * 4;
+  const height = ismobile ? size * 4 : numSections * offsetDistance + size;
+  const width = ismobile ? numSections * offsetDistance + size : size * 4;
 
-  const bgMaxSize = isMobile ? 400 : 275;
+  const bgMaxSize = ismobile ? 400 : 275;
 
   // state toggle used to interpolate values for animations
   const [toggle, setToggle] = useState(false);
@@ -82,7 +86,7 @@ function ScrollOverlay() {
     <Container
       onMouseEnter={() => setToggle(true)}
       onMouseLeave={() => setToggle(false)}
-      isMobile={isMobile}
+      ismobile={ismobile}
       width={width}
       height={height}
       style={{
@@ -90,7 +94,7 @@ function ScrollOverlay() {
       }}
     >
       <Background
-        isMobile={isMobile}
+        ismobile={ismobile}
         style={{
           "--size": bgToggle
             .to({ output: [100, bgMaxSize] })
@@ -105,7 +109,7 @@ function ScrollOverlay() {
         numSections={numSections}
         breakpoints={breakpoints}
         textToggles={textToggles}
-        isMobile={isMobile}
+        ismobile={ismobile}
       />
     </Container>
   );

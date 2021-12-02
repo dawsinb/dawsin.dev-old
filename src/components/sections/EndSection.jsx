@@ -61,7 +61,7 @@ function EndSection({ index, parallax }) {
 
   nineGeometry.setAttribute("position", new BufferAttribute(nineBuffer, 3))
   nineGeometry.morphAttributes.position = [new BufferAttribute(nineBufferJp, 3)]
-  console.log(nineGeometry.attributes.position)
+
 
   const fourGeometry = new TextGeometry("four", {
     font: font,

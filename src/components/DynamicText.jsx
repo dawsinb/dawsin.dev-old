@@ -1,4 +1,4 @@
-import React, { useRef, useLayoutEffect, useCallback } from "react";
+import React, { useRef, useLayoutEffect, useEffect } from "react";
 import styled from "styled-components";
 
 // create container and section div styles to handle scroll snapping
@@ -45,10 +45,8 @@ function DynamicText({ children, ...props }) {
 
   // TODO: resize text when width or height of container changes
   useLayoutEffect(resize, []);
-  useLayoutEffect(() => {
-    window.addEventListener("keydown", () => {
-      console.log("resize");
-
+  useEffect(() => {
+    window.addEventListener("resize", () => {
       resize();
     });
   }, []);

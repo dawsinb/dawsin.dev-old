@@ -69,19 +69,6 @@ function TitleSection({ index, parallax, image, bgText, header, aspect, html }) 
         </group>
       </SectionItem>
 
-      <SectionItem parallax={3}>
-        <Html style={{ color: "white" }} position={htmlPosition} zIndexRange={[16, 16]}>
-          <div style={{ width: "50vw" }}>
-            hello world o/
-            <br />
-            welcome to my portfolio
-            <br />
-            <br />
-            scroll down to continue
-          </div>
-        </Html>
-      </SectionItem>
-
       <SectionItem parallax={4}>
         <mesh rotation={[0, 0, Math.PI / 8]} position={[0, 0, -10]}>
           <planeGeometry args={[width * 3, height * 2, 32, 32]} />

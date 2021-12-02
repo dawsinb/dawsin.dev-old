@@ -12,25 +12,25 @@ const Container = styled(animated.div)`
   width: ${(props) => props.size * props.scaleFactor}px;
   height: ${(props) => props.size * props.scaleFactor}px;
   right: ${(props) =>
-    props.isMobile
+    props.ismobile
       ? `calc(50% - ${-props.offset}px)`
       : `${props.size * 1.5}px`};
   top: ${(props) =>
-    props.isMobile ? "auto" : `calc(50% - ${props.offset}px)`};
-  bottom: ${(props) => (props.isMobile ? `${props.size * 0.25}px` : "auto")};
+    props.ismobile ? "auto" : `calc(50% - ${props.offset}px)`};
+  bottom: ${(props) => (props.ismobile ? `${props.size * 0.25}px` : "auto")};
   transform: translate(
       ${(props) => (props.size * props.scaleFactor) / 2}px,
       ${(props) => (-props.size * props.scaleFactor) / 2}px
     )
     translate(
       ${(props) =>
-        props.isMobile ? `var(--shift, 0px), 0px` : `0px, var(--shift, 0px)`}
+        props.ismobile ? `var(--shift, 0px), 0px` : `0px, var(--shift, 0px)`}
     )
     rotateZ(var(--rotate, 0rad));
 `;
 
 function PositionMarker({
-  isMobile,
+  ismobile,
   size,
   offsetDistance,
   numSections,
@@ -82,7 +82,7 @@ function PositionMarker({
       size={size}
       scaleFactor={scaleFactor}
       offset={startOffset}
-      isMobile={isMobile}
+      ismobile={ismobile}
       style={{
         "--shift": `${
           (scrollPosition / window.innerHeight) * offsetDistance
