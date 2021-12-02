@@ -1,56 +1,63 @@
-import React, { forwardRef, useRef, useEffect, useMemo } from "react";
+import React, { forwardRef, useRef, useEffect, useState } from "react";
+import { Vector2 } from "three";
 import { useFrame, useThree } from "@react-three/fiber";
 import { lerp } from "../utils";
-import "./distortionShaders/CustomMaterial";
+import "./shaders/DistortionMaterial";
 import { useStore } from "../store";
 
-const DistortionPlane = forwardRef(
-  ({ color = "white", shift = 1, opacity = 1, args, map, ...props }, ref) => {
-    const material = useRef();
+function DistortionPlane({ color = "white", shift = 1, opacity = 1, args, map, ...props }) {
+  const materialRef = useRef();
 
-    // set up transient subscription to the scroll position
-    const scrollRef = useRef(useStore.getState().scrollPosition);
-    useEffect(
-      () =>
-        useStore.subscribe(
-          (scrollPosition) => (scrollRef.current = scrollPosition),
-          (state) => state.scrollPosition
-        ),
-      []
-    );
-    // var to hold previous scroll position to calculate delta
-    let prevScrollPosition = 0;
+  // set up transient subscription to the scroll position
+  const scrollRef = useRef(useStore.getState().scrollPosition);
+  useEffect(
+    () =>
+      useStore.subscribe(
+        (scrollPosition) => (scrollRef.current = scrollPosition),
+        (state) => state.scrollPosition
+      ),
+    []
+  );
+  // var to hold previous scroll position to calculate delta
+  let prevScrollPosition = scrollRef.current;
 
-    // set up animation loop for distoration effect
-    const { size } = useThree();
-    const intensity = (1 / size.height) * 25;
-    const speed = 0.025;
-    useFrame(() => {
-      const scrollDelta = scrollRef.current - prevScrollPosition;
+  // set up animation loop for distoration effect
+  const { size } = useThree();
+  const [effectFactor, setEffectFactor] = useState(0)
+  const [mousePosition, setMousePosition] = useState(new Vector2(0.5, 0.5))
+  
+  useFrame(({mouse}) => {
+    const scrollDelta = (scrollRef.current - prevScrollPosition) / size.height;
 
-      // lerp shift value to the delta of the scroll position
-      material.current.shift = lerp(
-        material.current.shift,
-        scrollDelta * intensity,
-        speed
-      );
-      // update previous scroll position
-      prevScrollPosition = scrollRef.current;
-    });
+    // lerp direction to the direction of the mouse
+    materialRef.current.direction.lerp(mouse.normalize(), 0.01).normalize()
+    materialRef.current.mousePosition.lerp(mousePosition, 0.03)
+    // lerp towards current effect factor
+    materialRef.current.effectFactor = lerp(materialRef.current.effectFactor, effectFactor, 0.01)
 
-    return (
-      <mesh ref={ref} {...props}>
-        <planeBufferGeometry args={args} />
-        <customMaterial
-          ref={material}
-          color={color}
-          map={map}
-          transparent
-          opacity={opacity}
-        />
-      </mesh>
-    );
-  }
-);
+    // lerp shift value to the delta of the scroll position
+    materialRef.current.scrollFactor = lerp(materialRef.current.scrollFactor, scrollDelta, 0.025);
+    // update previous scroll position
+    prevScrollPosition = scrollRef.current;
+  });
+
+  return (
+    <mesh 
+      {...props}
+      onPointerMove={(e) => setMousePosition(e.intersections[0].uv)}
+      onPointerEnter={() => setEffectFactor(1)}
+      onPointerOut={() => setEffectFactor(0)}
+    >
+      <planeBufferGeometry args={args} />
+      <distortionMaterial
+        attach="material"
+        ref={materialRef}
+        imageTexture={map} 
+        scrollIntensity={5.0}
+        displacementIntensity={20.0}
+      />
+    </mesh>
+  );
+}
 
 export { DistortionPlane };

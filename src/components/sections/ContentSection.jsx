@@ -94,7 +94,7 @@ function ContentSection({ index, alternate, image, bgText, header, children }) {
     ? 0
     : (width / 2 - imageWidth / 2) * (alternate ? -1 : 1);
   const imageY = isMobile ? height / 4 : -height * 0.05;
-  const imagePosition = [imageX, imageY, 0];
+  const imagePosition = [imageX, imageY, 1];
 
   // calculate html width/height
   const htmlHeight = isMobile ? (height - imageHeight) * 0.75 : imageHeight;
