@@ -102,9 +102,12 @@ function EndSection({ index, parallax }) {
   const [nineState, setNineState] = useState(false)
   const [fourState, setFourState] = useState(false)
 
-  useFrame(() => {
-    nineRef.current.morphTargetInfluences[0] = lerp(nineRef.current.morphTargetInfluences[0], nineHovered ? 0.5 : Number(nineState), 0.03)
-    fourRef.current.morphTargetInfluences[0] = lerp(fourRef.current.morphTargetInfluences[0], fourHovered ? 0.5 : Number(fourState), 0.03)
+  useFrame(({clock}) => {
+    const time = clock.getElapsedTime() / 4
+    const hoverInfluenceNine = Math.sin(time) * 0.05 + 0.5
+    const hoverInfluenceFour = Math.cos(time) * 0.05 + 0.5
+    nineRef.current.morphTargetInfluences[0] = lerp(nineRef.current.morphTargetInfluences[0], nineHovered ? hoverInfluenceNine : Number(nineState), 0.03)
+    fourRef.current.morphTargetInfluences[0] = lerp(fourRef.current.morphTargetInfluences[0], fourHovered ? hoverInfluenceFour : Number(fourState), 0.03)
   })
 
   return (
