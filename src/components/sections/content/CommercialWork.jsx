@@ -14,8 +14,7 @@ function CommercialWork() {
       both more traditional sites, or fancy gpu accelerated ones like this one.
       <br />
       <br />
-      If you would like to some some examples of my work{" "}
-      <button onClick={() => console.log("clicky")}>click here</button>
+      See the next section for some examples of my work.
     </DynamicText>
   );
 }

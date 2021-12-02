@@ -110,6 +110,7 @@ function Track({
     "",
     "about me",
     "commercial",
+    "portfolio",
     "research",
     "euphony",
     "music",
