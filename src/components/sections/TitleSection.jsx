@@ -47,10 +47,8 @@ function TitleSection({ index, parallax, image, bgText, header, aspect, html }) 
   const textGroupRef = useRef()
   
   useFrame(({mouse}) => {
-    textGroupRef.current.position.x = lerp(textGroupRef.current.position.x, mouse.x * width / 20, 0.07)
-    textGroupRef.current.position.y = lerp(textGroupRef.current.position.y, mouse.y * height / 20, 0.07)
-    textGroupRef.current.rotation.x = lerp(textGroupRef.current.rotation.x, -mouse.y / 1.5, 0.07)
-    textGroupRef.current.rotation.y = lerp(textGroupRef.current.rotation.y, mouse.x / 1.5, 0.07)
+    textGroupRef.current.rotation.x = lerp(textGroupRef.current.rotation.x, -mouse.y / 1.5, 0.01)
+    textGroupRef.current.rotation.y = lerp(textGroupRef.current.rotation.y, mouse.x / 1.5, 0.01)
   })
 
   return (
