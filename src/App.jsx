@@ -12,7 +12,6 @@ import {
 } from "./components/sections/content/ContentIndex";
 import { PortfolioSection } from "./components/sections/PortfolioSection";
 import { EndSection } from "./components/sections/EndSection";
-import { useStore } from "./store";
 import { Background } from "./components/Background";
 import { Stats } from "@react-three/drei";
 
@@ -24,7 +23,6 @@ const CanvasContainer = styled("div")`
 function App() {
   return (
     <CanvasContainer>
-      <Stats />
       <Canvas
         linear
         orthographic

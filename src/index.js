@@ -11,9 +11,18 @@ const Container = styled("div")`
   height: 100vh;
 `;
 
+const LoadingContainer = styled("div")`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+`
+
 ReactDOM.render(
   <Container>
-    <Suspense fallback={<div className="loading" children="Loading..." />}>
+    <Suspense fallback={<LoadingContainer children="loading..." />}>
       <App />
     </Suspense>
     <ScrollHandler />
