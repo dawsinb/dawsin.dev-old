@@ -1,5 +1,6 @@
 import React, { Suspense } from "react";
 import ReactDOM from "react-dom";
+import { BrowserRouter as Router } from 'react-router-dom'
 import { App } from "./App";
 import { ScrollHandler } from "./components/ScrollHandler";
 import { ScrollOverlay } from "./components/scroll/ScrollOverlay";
@@ -19,6 +20,7 @@ const LoadingContainer = styled("div")`
   justify-content: center;
   font-size: 1rem;
 `
+const routerBaseName = process.env.PUBLIC_URL;
 
 ReactDOM.render(
   <Container>
