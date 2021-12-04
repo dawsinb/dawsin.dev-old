@@ -4,7 +4,7 @@
   "description": "Mixing refraction shaders and animations.",
   "keywords": [],
   "main": "src/index.js",
-  "homepage": "http://dawsinb.github.io/dawsin.dev",
+  "homepage": "https://dawsin.dev",
   "dependencies": {
     "@ninefour/euphony": "1.0.0",
     "@react-spring/core": "9.3.0",

@@ -22,7 +22,7 @@ function Background() {
     const count = Math.floor(seedRandomRange(seed, 2, 4));
     for (let i = 0; i < count; i++) {
       // generate brush
-      const svg = `/svg/brush${Math.floor(seedRandomRange(seed, 0, 7))}.svg`;
+      const svg = `/svg/brush${Math.floor(seedRandomRange(seed, 0, 6)) + 1}.svg`;
 
       // generate position
       const x = seedRandomRange(seed, -size.width / 2, size.width / 2);
